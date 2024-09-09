@@ -30,6 +30,12 @@ export default function RootLayout({
           <Link href={`/add`}>
             <h1>Add</h1>
           </Link>
+          <Link href={`/ultraHD`}>
+            <h1>4K Films</h1>
+          </Link>
+          <Link href={`/steelbooks`}>
+            <h1>Steelbook Films</h1>
+          </Link>
           {/* TODO Add other links */}
         </div>
         <ClientStuff>{children}</ClientStuff>
