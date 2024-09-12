@@ -6,7 +6,11 @@ import styles from "../page.module.css";
 import Link from "next/link";
 
 export default function Page() {
-  const { isLoading, error, data: series } = useQuery("series", fetchBluRaySeries);
+  const {
+    isLoading,
+    error,
+    data: series,
+  } = useQuery("series", fetchBluRaySeries);
 
   if (isLoading) return "Loading...";
   if (error) return "An error occurred: " + error;

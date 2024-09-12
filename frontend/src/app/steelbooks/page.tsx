@@ -6,6 +6,8 @@ import { fetchSteelbooks } from "./../util";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import ConfirmDelete from "../../reactComponents/ConfirmDelete";
+import DeleteButton from "@/reactComponents/DeleteButton";
+import EditButton from "@/reactComponents/EditButton";
 
 interface SearchboxProps {
   onSearch: (query: string) => void;
@@ -33,7 +35,11 @@ const SearchBox = ({ onSearch }: SearchboxProps) => {
 };
 
 export default function Home() {
-  const { isLoading, error, data: steelbooks } = useQuery("steelbooks", fetchSteelbooks);
+  const {
+    isLoading,
+    error,
+    data: steelbooks,
+  } = useQuery("steelbooks", fetchSteelbooks);
   const [searchTerm, setSearchTerm] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
   const [blurayToBeDeleted, setBlurayTobeDeleted] = useState(0);
@@ -76,15 +82,8 @@ export default function Home() {
                 </Link>
                 <td>{item.Series}</td>
                 <td>{item.Barcode}</td>
-                <td>
-                  <button
-                    onClick={async () => {
-                      handleDelete(item.ID);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
+                <EditButton ID={item.ID} />
+                <DeleteButton handleDelete={handleDelete} ID={item.ID} />
               </tr>
             ))}
         </tbody>

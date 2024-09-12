@@ -6,6 +6,8 @@ import { fetchBluRays } from "./util";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import ConfirmDelete from "../reactComponents/ConfirmDelete";
+import DeleteButton from "@/reactComponents/DeleteButton";
+import EditButton from "@/reactComponents/EditButton";
 
 interface SearchboxProps {
   onSearch: (query: string) => void;
@@ -75,15 +77,8 @@ export default function Home() {
                 </Link>
                 <td>{item.Series}</td>
                 <td>{item.Barcode}</td>
-                <td>
-                  <button
-                    onClick={async () => {
-                      handleDelete(item.ID);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
+                <EditButton ID={item.ID} />
+                <DeleteButton handleDelete={handleDelete} ID={item.ID} />
               </tr>
             ))}
         </tbody>

@@ -28,6 +28,8 @@ export default function ConfirmDelete({
     }
     queryClient.invalidateQueries("blurays");
     queryClient.invalidateQueries("seriesOfBlurays");
+    queryClient.invalidateQueries("ultra");
+    queryClient.invalidateQueries("steelbooks");
     setShowConfirm(false);
   };
 

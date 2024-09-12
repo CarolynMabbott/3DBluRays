@@ -6,6 +6,8 @@ import styles from "../page.module.css";
 import ConfirmDelete from "../../reactComponents/ConfirmDelete";
 import { useState } from "react";
 import Link from "next/link";
+import DeleteButton from "@/reactComponents/DeleteButton";
+import EditButton from "@/reactComponents/EditButton";
 
 export default function Page({
   searchParams,
@@ -49,25 +51,20 @@ export default function Page({
           <tbody>
             <tr className={styles.row}>
               <Link href={`/series/blurays?name=${bluray.Series}`}>
-                  <td>{bluray.Series}</td>
+                <td>{bluray.Series}</td>
               </Link>
               <td>{bluray.Includes2D ? "Yes" : "No"}</td>
               <td>{bluray.Includes4K ? "Yes" : "No"}</td>
               <td>{bluray.SteelbookEdition ? "Yes" : "No"}</td>
               <td>{bluray.HasSlipcover ? "Yes" : "No"}</td>
               <td>{bluray.Barcode}</td>
+              <EditButton ID={id} />
             </tr>
           </tbody>
         </table>
       </div>
       <div>
-        <button
-          onClick={async () => {
-            handleDelete(id);
-          }}
-        >
-          Delete
-        </button>
+        <DeleteButton handleDelete={handleDelete} ID={id} />
       </div>
       <ConfirmDelete
         showConfirm={showConfirm}

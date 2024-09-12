@@ -68,3 +68,15 @@ export const addSeries = async (data: any) => {
     throw new Error("Network response was not ok");
   }
 };
+export const patchSingleBluray = async (data: any) => {
+  const response = await fetch("http://localhost:8080/bluray/edit", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+};

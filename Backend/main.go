@@ -25,6 +25,7 @@ func main() {
 	http.HandleFunc("/steelbooks", getSteelbooks)
 	http.HandleFunc("/series/add", addSeries)
 	http.HandleFunc("/series", getSeries)
+	http.HandleFunc("/bluray/edit", editBluray)
 
 	// TODO - Used for testing, to be deleted
 	http.HandleFunc("/debug/populate", populateDB)
@@ -289,6 +290,34 @@ func deleteBluray(w http.ResponseWriter, r *http.Request) {
 		// TODO Check this is a valid number
 		id := r.URL.Query().Get("id")
 		_, err := db.Exec("DELETE FROM blurays WHERE id = ?", id)
+		if err != nil {
+			panic(err)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+func editBluray(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*") // TODO - Change later to the correct domain
+	w.Header().Set("Access-Control-Allow-Methods", strings.Join([]string{http.MethodOptions, http.MethodPatch}, ", "))
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusNoContent)
+	} else if r.Method == http.MethodPatch {
+		db := openDB()
+		defer db.Close()
+
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			panic(err)
+		}
+		var bluray BluRay
+		err = json.Unmarshal(body, &bluray)
+		if err != nil {
+			panic(err)
+		}
+
+		_, err = db.Exec("UPDATE blurays SET Name = $Name, Series = $Series, Includes2D = $Includes2D, Includes4K = $Includes4K, SteelbookEdition = $SteelbookEdition, HasSlipcover = $HasSlipcover, Barcode = $Barcode WHERE id = $ID", bluray.Name, bluray.Series, bluray.Includes2D, bluray.Includes4K, bluray.SteelbookEdition, bluray.HasSlipcover, bluray.Barcode, bluray.ID)
 		if err != nil {
 			panic(err)
 		}

@@ -1,38 +1,84 @@
 "use client";
 
-import { addSingleBluRay } from "../util";
-import styles from "../page.module.css";
+import { fetchSingleBluRay, patchSingleBluray } from "../../util";
+import styles from "../../page.module.css";
+import { useQuery } from "react-query";
+import { useState } from "react";
+import ConfirmEdit from "../../../reactComponents/ConfirmEdit";
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    id?: number;
+  };
+}) {
+  const id = Number(searchParams?.id) || 1;
+  const {
+    isLoading,
+    error,
+    data: bluray,
+  } = useQuery(["bluray", id], () => fetchSingleBluRay(id));
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [blurayToBeEdited, setBlurayTobeEdited] = useState(0);
+
+  if (isLoading) return "Loading...";
+  if (error) return "An error occurred: " + error;
+
+  const handleEditBluray = async (editedBluray: any) => {
+    setShowConfirm(true);
+    setBlurayTobeEdited(editedBluray);
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.card__content}>
-        <h2>Add</h2>
+        <h2>Edit Blu Ray</h2>
         <form>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" name="name" />
+          <input type="text" id="name" name="name" defaultValue={bluray.Name} />
           <label htmlFor="series">Series</label>
-          <input type="text" id="series" name="series" />
+          <input
+            type="text"
+            id="series"
+            name="series"
+            defaultValue={bluray.Series}
+          />
           <label htmlFor="Includes 2D Version">Includes 2D Version</label>
           <input
             type="checkbox"
             id="Includes 2D Version"
             name="Includes 2D Version"
+            defaultChecked={bluray.Includes2D}
           />
           <label htmlFor="Includes 4K Version">Includes 4K Version</label>
           <input
             type="checkbox"
             id="Includes 4K Version"
             name="Includes 4K Version"
+            defaultChecked={bluray.Includes4K}
           />
           <label htmlFor="Steelbook Edition">Steelbook Edition</label>
           <input
             type="checkbox"
             id="Steelbook Edition"
             name="Steelbook Edition"
+            defaultChecked={bluray.SteelbookEdition}
+          />
+          <label htmlFor="Has Slipcover">Has Slipcover</label>
+          <input
+            type="checkbox"
+            id="Has Slipcover"
+            name="Has Slipcover"
+            defaultChecked={bluray.HasSlipcover}
           />
           <label htmlFor="barcode">Barcode</label>
-          <input type="text" id="barcode" name="barcode" />
+          <input
+            type="text"
+            id="barcode"
+            name="barcode"
+            defaultValue={bluray.Barcode}
+          />
           <button
             onClick={async (e) => {
               e.preventDefault();
@@ -51,6 +97,9 @@ export default function Page() {
               let steelbookEditionElement = document.getElementById(
                 "Steelbook Edition",
               ) as HTMLInputElement;
+              let hasSlipcoverElement = document.getElementById(
+                "Has Slipcover",
+              ) as HTMLInputElement;
               let barcodeElement = document.getElementById(
                 "barcode",
               ) as HTMLInputElement;
@@ -66,21 +115,30 @@ export default function Page() {
                 alert("Please enter a barcode.");
                 return;
               }
-              let newBluray = {
+              let editedBluray = {
                 Name: nameElement.value,
                 Series: seriesElement.value,
                 Includes2D: includes2DVersionElement.checked,
                 Includes4K: includes4KVersionElement.checked,
                 SteelbookEdition: steelbookEditionElement.checked,
+                HasSlipcover: hasSlipcoverElement.checked,
                 Barcode: barcodeElement.value,
+                ID: id,
               };
-              await addSingleBluRay(newBluray);
+
+              handleEditBluray(editedBluray);
             }}
           >
-            Submit
+            Make Changes
           </button>
         </form>
       </div>
+      <ConfirmEdit
+        showConfirm={showConfirm}
+        setShowConfirm={setShowConfirm}
+        originalBluray={bluray}
+        blurayToBeEdited={blurayToBeEdited}
+      />
     </main>
   );
 }
