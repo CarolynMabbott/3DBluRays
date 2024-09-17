@@ -1,12 +1,12 @@
 "use client";
 
-import { patchSingleBluray } from "@/app/util";
+import { BluRay, patchSingleBluray } from "@/app/util";
 import { useRef } from "react";
 import styles from "../app/page.module.css";
 
 interface ConfirmEditProps {
-  blurayToBeEdited: any;
-  originalBluray: any;
+  blurayToBeEdited: BluRay;
+  originalBluray: BluRay;
   showConfirm: boolean;
   setShowConfirm: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -36,7 +36,8 @@ export default function ConfirmEdit({
   }
 
   const result = [];
-  for (let element in blurayToBeEdited) {
+  let element: keyof BluRay;
+  for (element in blurayToBeEdited) {
     let originalValue = String(originalBluray[element]);
     let newValue = String(blurayToBeEdited[element]);
     if (newValue != originalValue) {

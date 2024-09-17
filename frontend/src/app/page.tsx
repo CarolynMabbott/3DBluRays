@@ -42,6 +42,7 @@ export default function Home() {
 
   if (isLoading) return "Loading...";
   if (error) return "An error occurred: " + error;
+  if (blurays === undefined) return "BluRays not found";
 
   const handleDelete = (ID: number) => {
     setShowConfirm(true);
@@ -66,11 +67,11 @@ export default function Home() {
         <tbody>
           {blurays
             .filter(
-              (item: any) =>
+              (item) =>
                 item.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 item.Series.toLowerCase().includes(searchTerm.toLowerCase()),
             )
-            .map((item: any, index: number) => (
+            .map((item, index) => (
               <tr key={index} className={styles.row}>
                 <Link href={`/bluray?id=${item.ID}`}>
                   <td>{item.Name}</td>

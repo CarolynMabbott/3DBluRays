@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchSingleBluRay, patchSingleBluray } from "../../util";
+import { BluRay, fetchSingleBluRay } from "../../util";
 import styles from "../../page.module.css";
 import { useQuery } from "react-query";
 import { useState } from "react";
@@ -20,12 +20,13 @@ export default function Page({
     data: bluray,
   } = useQuery(["bluray", id], () => fetchSingleBluRay(id));
   const [showConfirm, setShowConfirm] = useState(false);
-  const [blurayToBeEdited, setBlurayTobeEdited] = useState(0);
+  const [blurayToBeEdited, setBlurayTobeEdited] = useState(bluray);
 
   if (isLoading) return "Loading...";
   if (error) return "An error occurred: " + error;
+  if (bluray === undefined || blurayToBeEdited === undefined) return "BluRay not found";
 
-  const handleEditBluray = async (editedBluray: any) => {
+  const handleEditBluray = async (editedBluray: BluRay) => {
     setShowConfirm(true);
     setBlurayTobeEdited(editedBluray);
   };
@@ -115,7 +116,7 @@ export default function Page({
                 alert("Please enter a barcode.");
                 return;
               }
-              let editedBluray = {
+              let editedBluray: BluRay = {
                 Name: nameElement.value,
                 Series: seriesElement.value,
                 Includes2D: includes2DVersionElement.checked,

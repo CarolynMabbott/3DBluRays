@@ -32,6 +32,7 @@ export default function Page({
 
   if (isLoading) return "Loading...";
   if (error) return "An error occurred: " + error;
+  if (bluraySeries === undefined) return "BluRay in Series not found";
 
   return (
     <main className={styles.main}>
@@ -46,7 +47,7 @@ export default function Page({
             </tr>
           </thead>
           <tbody>
-            {bluraySeries.map((item: any, index: number) => (
+            {bluraySeries.map((item, index) => ( 
               <tr key={index} className={styles.row}>
                 <Link href={`/bluray?id=${item.ID}`}>
                   <td>{item.Name}</td>

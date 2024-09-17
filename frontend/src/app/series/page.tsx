@@ -14,13 +14,14 @@ export default function Page() {
 
   if (isLoading) return "Loading...";
   if (error) return "An error occurred: " + error;
+  if (series === undefined) return "BluRay Series not found";
 
   return (
     <main className={styles.main}>
       <div className={styles.card__content}>
         <h2>BluRay Series</h2>
         <div>
-          {series.map((item: any, index: number) => (
+          {series.map((item, index) => (
             <div key={index}>
               <Link href={`/series/blurays?name=${item}`}>
                 <td>{item}</td>

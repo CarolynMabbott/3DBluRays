@@ -32,6 +32,7 @@ export default function Page({
 
   if (isLoading) return "Loading...";
   if (error) return "An error occurred: " + error;
+  if (bluray === undefined) return "BluRay not found";
 
   return (
     <main className={styles.main}>
@@ -59,12 +60,10 @@ export default function Page({
               <td>{bluray.HasSlipcover ? "Yes" : "No"}</td>
               <td>{bluray.Barcode}</td>
               <EditButton ID={id} />
+              <DeleteButton handleDelete={handleDelete} ID={id} />
             </tr>
           </tbody>
         </table>
-      </div>
-      <div>
-        <DeleteButton handleDelete={handleDelete} ID={id} />
       </div>
       <ConfirmDelete
         showConfirm={showConfirm}

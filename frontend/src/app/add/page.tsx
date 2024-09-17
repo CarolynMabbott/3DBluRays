@@ -51,6 +51,9 @@ export default function Page() {
               let steelbookEditionElement = document.getElementById(
                 "Steelbook Edition",
               ) as HTMLInputElement;
+              let hasSlipcoverElement = document.getElementById(
+                "Has Slipcover",
+              ) as HTMLInputElement;
               let barcodeElement = document.getElementById(
                 "barcode",
               ) as HTMLInputElement;
@@ -72,6 +75,7 @@ export default function Page() {
                 Includes2D: includes2DVersionElement.checked,
                 Includes4K: includes4KVersionElement.checked,
                 SteelbookEdition: steelbookEditionElement.checked,
+                HasSlipcover: hasSlipcoverElement.checked,
                 Barcode: barcodeElement.value,
               };
               await addSingleBluRay(newBluray);
