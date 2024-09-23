@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 
 	"encoding/json"
@@ -262,8 +263,20 @@ func getBluray(w http.ResponseWriter, r *http.Request) {
 		defer db.Close()
 		// TODO Check this is a valid number
 		id := r.URL.Query().Get("id")
+		idNumber, err := strconv.Atoi(id)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Invalid ID"))
+			return
+		}
+		// check number is positive
+		if idNumber < 1 {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Invalid ID"))
+			return
+		}
 		var bluray BluRay
-		rows, err := db.Query("SELECT * FROM blurays WHERE id = ?", id)
+		rows, err := db.Query("SELECT * FROM blurays WHERE id = ?", idNumber)
 		if err != nil {
 			panic(err)
 		}
@@ -289,7 +302,19 @@ func deleteBluray(w http.ResponseWriter, r *http.Request) {
 		defer db.Close()
 		// TODO Check this is a valid number
 		id := r.URL.Query().Get("id")
-		_, err := db.Exec("DELETE FROM blurays WHERE id = ?", id)
+		idNumber, err := strconv.Atoi(id)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Invalid ID"))
+			return
+		}
+		// check number is positive
+		if idNumber < 1 {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Invalid ID"))
+			return
+		}
+		_, err = db.Exec("DELETE FROM blurays WHERE id = ?", id)
 		if err != nil {
 			panic(err)
 		}
