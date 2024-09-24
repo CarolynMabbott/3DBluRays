@@ -16,7 +16,7 @@ export default function ConfirmEdit({
   originalBluray,
   showConfirm,
   setShowConfirm,
-  }: ConfirmEditProps) {
+}: ConfirmEditProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const handleConfirm = async () => {

@@ -47,7 +47,7 @@ export default function Page({
             </tr>
           </thead>
           <tbody>
-            {bluraySeries.map((item, index) => ( 
+            {bluraySeries.map((item, index) => (
               <tr key={index} className={styles.row}>
                 <Link href={`/bluray?id=${item.ID}`}>
                   <td>{item.Name}</td>

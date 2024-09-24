@@ -1,9 +1,20 @@
 "use client";
 
-import { addSingleBluRay } from "../util";
+import { addSeries, addSingleBluRay, fetchBluRaySeries } from "../util";
 import styles from "../page.module.css";
+import { useQuery } from "react-query";
 
 export default function Page() {
+  const {
+    isLoading,
+    error,
+    data: series,
+  } = useQuery("series", fetchBluRaySeries);
+
+  if (isLoading) return "Loading...";
+  if (error) return "An error occurred: " + error;
+  if (series === undefined) return "Series not found";
+
   return (
     <main className={styles.main}>
       <div className={styles.card__content}>
@@ -31,6 +42,8 @@ export default function Page() {
             id="Steelbook Edition"
             name="Steelbook Edition"
           />
+          <label htmlFor="Has Slipcover">Has Slipcover</label>
+          <input type="checkbox" id="Has Slipcover" name="Has Slipcover" />
           <label htmlFor="barcode">Barcode</label>
           <input type="text" id="barcode" name="barcode" />
           <button
@@ -78,7 +91,13 @@ export default function Page() {
                 HasSlipcover: hasSlipcoverElement.checked,
                 Barcode: barcodeElement.value,
               };
+              // if series not match one of series then pop up / just add it
+              if (!series.includes(newBluray.Series)) {
+                //TODO - Add pop up to ask user did they want toadd series
+                await addSeries(newBluray.Series);
+              }
               await addSingleBluRay(newBluray);
+              alert("BluRay added successfully");
             }}
           >
             Submit

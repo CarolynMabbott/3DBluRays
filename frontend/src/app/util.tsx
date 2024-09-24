@@ -1,3 +1,5 @@
+import { json } from "stream/consumers";
+
 export interface BluRayWithoutID {
   Name: string;
   Series: string;
@@ -10,7 +12,7 @@ export interface BluRayWithoutID {
 
 export interface BluRay extends BluRayWithoutID {
   ID: number;
-};
+}
 
 export interface BluRaySeries {
   ID: number;
@@ -20,25 +22,27 @@ export interface BluRaySeries {
 const fetchJSON = async (url: string) => {
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error(
+      "Network response was not ok. Response status is:" + response.status,
+    );
   }
   return response.json();
 };
 
 export const fetchBluRays = async () => {
-  return await fetchJSON("http://localhost:8080/blurays") as BluRay[];
+  return (await fetchJSON("http://localhost:8080/blurays")) as BluRay[];
 };
 
 export const fetchUltraHDs = async () => {
-  return await fetchJSON("http://localhost:8080/ultraHD") as BluRay[];
+  return (await fetchJSON("http://localhost:8080/ultraHD")) as BluRay[];
 };
 
 export const fetchSteelbooks = async () => {
-  return await fetchJSON("http://localhost:8080/steelbooks") as BluRay[];
+  return (await fetchJSON("http://localhost:8080/steelbooks")) as BluRay[];
 };
 
 export const fetchSingleBluRay = async (id: number) => {
-  return await fetchJSON("http://localhost:8080/bluray?id=" + id) as BluRay;
+  return (await fetchJSON("http://localhost:8080/bluray?id=" + id)) as BluRay;
 };
 
 export const deleteSingleBluRay = async (id: number) => {
@@ -46,7 +50,9 @@ export const deleteSingleBluRay = async (id: number) => {
     method: "DELETE",
   });
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error(
+      "Network response was not ok. Response status is:" + response.status,
+    );
   }
 };
 
@@ -59,34 +65,41 @@ export const addSingleBluRay = async (data: BluRayWithoutID) => {
     body: JSON.stringify(data),
   });
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error(
+      "Network response was not ok. Response status is:" + response.status,
+    );
   }
 };
 
 export const fetchBluRaySeries = async () => {
-  return await fetchJSON("http://localhost:8080/bluray/series") as string[];
+  return (await fetchJSON("http://localhost:8080/bluray/series")) as string[];
 };
 
 export const fetchBluraysInSeries = async (name: string) => {
-  return await fetchJSON("http://localhost:8080/series/blurays?name=" + name) as BluRay[];
+  return (await fetchJSON(
+    "http://localhost:8080/series/blurays?name=" + name,
+  )) as BluRay[];
 };
 
 export const fetchSeries = async () => {
-  return await fetchJSON("http://localhost:8080/series") as BluRaySeries[];
+  return (await fetchJSON("http://localhost:8080/series")) as BluRaySeries[];
 };
 
-export const addSeries = async (data: any) => {
+export const addSeries = async (seriesName: string) => {
   const response = await fetch("http://localhost:8080/series/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: seriesName,
   });
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error(
+      "Network response was not ok. Response status is:" + response.status,
+    );
   }
 };
+
 export const patchSingleBluray = async (data: BluRay) => {
   const response = await fetch("http://localhost:8080/bluray/edit", {
     method: "PATCH",
@@ -96,6 +109,19 @@ export const patchSingleBluray = async (data: BluRay) => {
     body: JSON.stringify(data),
   });
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error(
+      "Network response was not ok. Response status is:" + response.status,
+    );
+  }
+};
+
+export const deleteSeries = async (id: number) => {
+  const response = await fetch("http://localhost:8080/series/delete?id=" + id, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error(
+      "Network response was not ok. Response status is:" + response.status,
+    );
   }
 };

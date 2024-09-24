@@ -1,13 +1,17 @@
 import exp from "constants";
 import * as API from "./util";
-import {it, expect} from "@jest/globals";
+import { it, expect } from "@jest/globals";
 
-// to test make sure backend server is already running 
+// to test make sure backend server is already running
 
-it ("adds a single BluRay", async () => {
+it("adds a series", async () => {
+  await API.addSeries("Test Series");
+});
+
+it("adds a single BluRay", async () => {
   const newBluray = {
     Name: "Test",
-    Series: "Test",
+    Series: "Test Series",
     Includes2D: true,
     Includes4K: true,
     SteelbookEdition: true,
@@ -17,18 +21,18 @@ it ("adds a single BluRay", async () => {
   await API.addSingleBluRay(newBluray);
 });
 
-let bluraytodelete:number
-it ("fetches BluRays", async () => {
+let bluraytodelete: number;
+it("fetches BluRays", async () => {
   const blurays = await API.fetchBluRays();
   expect(blurays).toBeDefined();
   bluraytodelete = blurays[blurays.length - 1].ID;
 });
 
-it ("patches a single BluRay", async () => {
+it("patches a single BluRay", async () => {
   const newBluray = {
     ID: bluraytodelete,
     Name: "Test Changed",
-    Series: "Test",
+    Series: "Test Series",
     Includes2D: false,
     Includes4K: true,
     SteelbookEdition: false,
@@ -38,45 +42,43 @@ it ("patches a single BluRay", async () => {
   await API.patchSingleBluray(newBluray);
 });
 
-it ("fetches UltraHDs", async () => {
+it("fetches UltraHDs", async () => {
   const ultraHDs = await API.fetchUltraHDs();
   expect(ultraHDs).toBeDefined();
 });
 
-it ("fetches Steelbooks", async () => {
+it("fetches Steelbooks", async () => {
   const steelbooks = await API.fetchSteelbooks();
   expect(steelbooks).toBeDefined();
 });
 
-it ("fetches a single BluRay", async () => {
+it("fetches a single BluRay", async () => {
   const bluray = await API.fetchSingleBluRay(bluraytodelete);
   expect(bluray).toBeDefined();
   expect(bluray.Name).toBe("Test Changed");
 });
 
-it ("deletes a single BluRay", async () => {
+it("deletes a single BluRay", async () => {
   await API.deleteSingleBluRay(bluraytodelete);
 });
 
-it ("fetches BluRay series", async () => {
+it("fetches BluRay series", async () => {
   const bluraySeries = await API.fetchBluRaySeries();
   expect(bluraySeries).toBeDefined();
 });
 
-it ("fetches BluRays in a series", async () => {
+it("fetches BluRays in a series", async () => {
   const blurays = await API.fetchBluraysInSeries("Pokemon");
   expect(blurays).toBeDefined();
 });
 
-it ("fetches series", async () => {
+let seriesToDelete: number;
+it("fetches series", async () => {
   const series = await API.fetchSeries();
   expect(series).toBeDefined();
+  seriesToDelete = series[series.length - 1].ID;
 });
 
-it ("adds a series", async () => {
-  const newSeries = {
-    Name: "Test",
-  };
-  await API.addSeries(newSeries);
+it("deletes a series", async () => {
+  await API.deleteSeries(seriesToDelete);
 });
-

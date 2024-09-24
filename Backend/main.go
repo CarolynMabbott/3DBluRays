@@ -27,6 +27,7 @@ func main() {
 	http.HandleFunc("/series/add", addSeries)
 	http.HandleFunc("/series", getSeries)
 	http.HandleFunc("/bluray/edit", editBluray)
+	http.HandleFunc("/series/delete", deleteSeries)
 
 	// TODO - Used for testing, to be deleted
 	http.HandleFunc("/debug/populate", populateDB)
@@ -392,13 +393,38 @@ func addSeries(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			panic(err)
 		}
-		var series Series
-		err = json.Unmarshal(body, &series)
+
+		_, err = db.Exec("INSERT INTO series (Name) VALUES ($Name)", body)
 		if err != nil {
 			panic(err)
 		}
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
 
-		_, err = db.Exec("INSERT INTO series (Name) VALUES ($Name)", series.Name)
+func deleteSeries(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*") // TODO - Change later to the correct domain
+	w.Header().Set("Access-Control-Allow-Methods", strings.Join([]string{http.MethodOptions, http.MethodDelete}, ", "))
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusNoContent)
+	} else if r.Method == http.MethodDelete {
+		db := openDB()
+		defer db.Close()
+		// TODO Check this is a valid number
+		id := r.URL.Query().Get("id")
+		idNumber, err := strconv.Atoi(id)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Invalid ID"))
+			return
+		}
+		// check number is positive
+		if idNumber < 1 {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Invalid ID"))
+			return
+		}
+		_, err = db.Exec("DELETE FROM series WHERE id = ?", id)
 		if err != nil {
 			panic(err)
 		}

@@ -24,7 +24,8 @@ export default function Page({
 
   if (isLoading) return "Loading...";
   if (error) return "An error occurred: " + error;
-  if (bluray === undefined || blurayToBeEdited === undefined) return "BluRay not found";
+  if (bluray === undefined || blurayToBeEdited === undefined)
+    return "BluRay not found";
 
   const handleEditBluray = async (editedBluray: BluRay) => {
     setShowConfirm(true);
